@@ -9,6 +9,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import Card from './Card';
 import Roadmap from './Roadmap';
 import Works from './Works';
+import Journey from './Journey';
 export default function Home() {
 
   return (
@@ -16,7 +17,7 @@ export default function Home() {
     <div className='home'>
      
        <div className='home-container'>
-         <p className='title'>Next Generation Learning Platform</p>
+        
         <h1>Learn Smarter with <span>AI-Powered Roadmaps</span></h1>
         <p className='description'>Skip the generic tutorials. Get a personalized learning path generated specifically for your career goals, with real-time AI assistance.</p>
         <div className='search-bar'>
@@ -37,6 +38,7 @@ export default function Home() {
     </div>
     <Roadmap/>
     <Works/>
+    <Journey/>
     </div>
   )
 }

@@ -5,7 +5,6 @@ export default function Roadmap() {
   return (
     <div className='roadmap-text'>
       <div className='roadmap-content'>
-        <p className='feature-title'>FEATURED ROADMAP</p>
         <h1>Interactive<span> Progress Tracking</span></h1>
         <p className='roadmap-desc'>Experience a unique UI where your learning journey is visualized. See what's next, track your accomplishments, and stay motivated with clear milestones.</p>
         <ul>
