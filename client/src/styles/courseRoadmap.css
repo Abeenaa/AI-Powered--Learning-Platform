@@ -1,0 +1,151 @@
+
+.courseRoadmap-text{
+   
+    width: 100%;
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0 20px;
+    h1{
+        font-weight: 800;
+        font-size: 2rem;
+        margin-top: 0;
+    }
+}
+.courseRoadmap-content{
+    
+    width: 50%;
+    .feature-title{
+        border: none;
+         background: linear-gradient(90deg, #d0dde0, #bebdbd);
+        border-radius: 15px;
+        width: 220px;
+        padding: 3px 20px;
+        font-size: 15px;
+         font-family: 'Poppins', sans-serif;
+    }
+    h1{
+           font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        margin: 20px 0;
+    }
+   
+    
+}
+.courseRoadmap-container {
+  
+  width: 70%;
+  margin: 10px auto;
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 20px 25px;
+   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.header p {
+  font-size: 12px;
+  color: gray;
+  letter-spacing: 1px;
+}
+
+.courseprogress {
+  text-align: right;
+}
+
+.course-progress h3 {
+  margin: 0;
+}
+
+.course-progress span {
+  font-size: 12px;
+  color: gray;
+}
+
+.course-timeline {
+  margin-top: 30px;
+  position: relative;
+}
+
+.course-timeline::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #ddd;
+}
+
+.course-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.course-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  z-index: 1;
+}
+
+.course-icon.completed {
+  background: black;
+  color: white;
+}
+
+.course-icon.active {
+  border: 2px solid black;
+  background: white;
+}
+
+.course-content h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.course-content p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: gray;
+}
+
+.course-time {
+  margin-left: auto;
+  font-size: 12px;
+  color: gray;
+}
+
+.locked {
+  opacity: 0.5;
+}  
+.back-btn{
+   border: none;
+   background-color: white;
+   font-weight: 600;
+   margin: 20px;
+}
+.course-level{
+    background-color: rgb(230, 227, 227);
+    color: white;
+    width: 120px;
+    padding: 5px 10px ;
+    border-radius: 15px;
+}

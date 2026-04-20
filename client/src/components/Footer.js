@@ -6,7 +6,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 export default function Footer() {
   return (
-    <div>
+    <div className='footer'>
 <div className='footer-container'>
       <div className='footer-logo'>
           <img src={logo} alt='logo' />

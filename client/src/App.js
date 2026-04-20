@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard'
 import Chat from './components/Chat'
 import Subscription from './components/Subscription'
 import Help from './components/Help'
+import CourseRoadmap from "./components/CourseRoadmap";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/chat" element={<Chat/>}/>
         <Route path="/subscription" element={<Subscription/>}/>
         <Route path="/help" element={<Help/>}/> 
+        <Route path="/courseRoadmap" element={<CourseRoadmap/>}/>
      </Routes>
   </BrowserRouter>
   );

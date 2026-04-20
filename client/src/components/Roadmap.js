@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaCheck, FaLock } from "react-icons/fa";
 import { IoPlay } from "react-icons/io5";
+import '../styles/Home.css'
 export default function Roadmap() {
   return (
     <div className='roadmap-text'>
@@ -38,7 +39,7 @@ export default function Roadmap() {
           <span className="time">15m</span>
         </div>
 
-        {/* Active */}
+       
         <div className="item">
           <div className="icon active">
             <IoPlay />
@@ -49,8 +50,6 @@ export default function Roadmap() {
           </div>
           <span className="time">25m</span>
         </div>
-
-        {/* Locked */}
         <div className="item locked">
           <div className="icon">
             <FaLock />
