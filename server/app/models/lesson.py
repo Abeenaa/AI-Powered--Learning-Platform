@@ -10,7 +10,7 @@ class Lesson(Base):
     course_id = Column(Integer, ForeignKey("courses.id"))
     title = Column(String, nullable=False)
     content = Column(Text, nullable=False)
-    order = Column(Integer, nullable=False)  # IMPORTANT: For roadmap sequence
+    order = Column(Integer, nullable=False)  #  For roadmap sequence
     duration = Column(String, nullable=True)  # e.g., "30 minutes"
     
     # Relationships
