@@ -1,5 +1,4 @@
- # /courses endpoints
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from ..database import get_db
@@ -13,6 +12,7 @@ from ..schemas.course import (
     LessonCreate, LessonResponse, RoadmapResponse, RoadmapLesson
 )
 from ..utils.dependencies import get_current_user, require_teacher
+from ..utils.security import decode_access_token
 
 router = APIRouter(prefix="/courses", tags=["Courses"])
 
@@ -42,8 +42,8 @@ def get_course(course_id: int, db: Session = Depends(get_db)):
 @router.get("/{course_id}/roadmap", response_model=RoadmapResponse)
 def get_roadmap(
     course_id: int,
-    db: Session = Depends(get_db),
-    current_user: Optional[User] = None
+    request: Request,
+    db: Session = Depends(get_db)
 ):
     """Get course roadmap with locked/unlocked lesson status"""
     course = db.query(Course).filter(Course.id == course_id).first()
@@ -60,26 +60,31 @@ def get_roadmap(
 
     completed_lesson_ids = set()
 
-    # If user is logged in, check their progress
-    if current_user:
-        enrollment = db.query(Enrollment).filter(
-            Enrollment.user_id == current_user.id,
-            Enrollment.course_id == course_id,
-            Enrollment.payment_completed == True
-        ).first()
-
-        if enrollment:
-            completed_progress = db.query(Progress).filter(
-                Progress.enrollment_id == enrollment.id,
-                Progress.completed == True
-            ).all()
-            completed_lesson_ids = {p.lesson_id for p in completed_progress}
+    # Try to get current user from token (optional)
+    auth_header = request.headers.get("Authorization")
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        payload = decode_access_token(token)
+        if payload:
+            user_id = payload.get("sub")
+            if user_id:
+                enrollment = db.query(Enrollment).filter(
+                    Enrollment.user_id == int(user_id),
+                    Enrollment.course_id == course_id,
+                    Enrollment.payment_completed == True
+                ).first()
+                if enrollment:
+                    completed_progress = db.query(Progress).filter(
+                        Progress.enrollment_id == enrollment.id,
+                        Progress.completed == True
+                    ).all()
+                    completed_lesson_ids = {p.lesson_id for p in completed_progress}
 
     # Build roadmap with locked/unlocked logic
     roadmap_lessons = []
     for i, lesson in enumerate(lessons):
         if i == 0:
-            locked = False  # First lesson always unlocked
+            locked = False
         else:
             prev_lesson = lessons[i - 1]
             locked = prev_lesson.id not in completed_lesson_ids
