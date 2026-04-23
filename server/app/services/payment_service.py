@@ -28,14 +28,14 @@ def initiate_chapa_payment(
         "amount": str(amount),
         "currency": "ETB",
         "email": email,
-        "first_name": first_name,
-        "last_name": "",
+        "first_name": first_name[:50],
+        "last_name": "User",
         "tx_ref": tx_ref,
         "callback_url": callback_url,
         "return_url": f"{settings.FRONTEND_URL}/payment/success",
         "customization": {
-            "title": course_title,
-            "description": f"Payment for {course_title}"
+            "title": course_title[:16],  # Chapa limits to 16 chars
+            "description": f"Course payment"
         }
     }
     response = requests.post(

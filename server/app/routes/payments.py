@@ -113,8 +113,9 @@ def initiate_payment(
             course_title=course.title,
             callback_url=f"{settings.FRONTEND_URL}/payment/chapa/callback"
         )
+        print(f"Chapa response: {result}")  # Debug
         if result.get("status") != "success":
-            raise HTTPException(status_code=400, detail="Failed to initiate Chapa payment")
+            raise HTTPException(status_code=400, detail=f"Chapa error: {result.get('message', result)}")
         checkout_url = result["data"]["checkout_url"]
     else:
         result = initiate_stripe_payment(
