@@ -167,6 +167,9 @@ def delete_course(
     if course.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your course")
 
+    db.query(Progress).filter(Progress.course_id == course_id).delete(synchronize_session=False)
+    db.query(Enrollment).filter(Enrollment.course_id == course_id).delete(synchronize_session=False)
+    db.query(Lesson).filter(Lesson.course_id == course_id).delete(synchronize_session=False)
     db.delete(course)
     db.commit()
 
