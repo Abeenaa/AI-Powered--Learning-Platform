@@ -4,6 +4,32 @@
 
 ---
 
+## System Architecture
+
+```
+Frontend (React)  ←→  FastAPI Backend  ←→  PostgreSQL Database
+                           ↕
+                    External Services:
+                    - Chapa (Ethiopian payments)
+                    - Stripe (International payments)
+                    - WebSocket (Real-time chat)
+```
+
+**Folder Structure:**
+```
+server/
+├── app/
+│   ├── models/      # Database tables (SQLAlchemy)
+│   ├── schemas/     # Request/Response validation (Pydantic)
+│   ├── routes/      # API endpoints (FastAPI routers)
+│   ├── services/    # Business logic (payments, AI, chat)
+│   └── utils/       # Helpers (JWT, password hashing)
+├── alembic/         # Database migrations
+└── requirements.txt
+```
+
+---
+
 ## Quick Start for Frontend Developer
 
 ### Base URL
@@ -250,3 +276,26 @@ uvicorn app.main:app --reload  # Start server
 - **Chapa** - Ethiopian payments
 - **Stripe** - International payments
 - **WebSockets** - Real-time chat
+
+---
+
+## Architecture Decisions
+
+| Decision | Choice | Reason |
+|----------|--------|--------|
+| Framework | FastAPI | Fast, async, auto-generates API docs |
+| Database | PostgreSQL | Reliable relational DB for structured learning data |
+| ORM | SQLAlchemy | Powerful Python ORM with migration support |
+| Auth | JWT tokens | Stateless, works well with React frontend |
+| Payments | Chapa + Stripe | Chapa for Ethiopia (ETB), Stripe for international (USD) |
+| Real-time | WebSockets | Native FastAPI support, no extra infrastructure needed |
+| AI | Smart algorithm | Progress-based recommendations without external API costs |
+
+---
+
+## Team
+
+- **Backend**: FastAPI (this repo - `server/` folder)
+- **Frontend**: React (same repo - `src/` folder)
+- **Integration branch**: `develop`
+- **Production branch**: `main`
