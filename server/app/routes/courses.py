@@ -167,6 +167,9 @@ def delete_course(
     if course.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your course")
 
+    db.query(Progress).filter(Progress.course_id == course_id).delete(synchronize_session=False)
+    db.query(Enrollment).filter(Enrollment.course_id == course_id).delete(synchronize_session=False)
+    db.query(Lesson).filter(Lesson.course_id == course_id).delete(synchronize_session=False)
     db.delete(course)
     db.commit()
 
@@ -194,6 +197,24 @@ def add_lesson(
     db.add(new_lesson)
     db.commit()
     db.refresh(new_lesson)
+
+    enrollments = db.query(Enrollment).filter(Enrollment.course_id == course_id).all()
+    if enrollments:
+        enrollment_ids = [enrollment.id for enrollment in enrollments]
+        existing_progress_enrollment_ids = {
+            progress.enrollment_id
+            for progress in db.query(Progress).filter(
+                Progress.lesson_id == new_lesson.id,
+                Progress.enrollment_id.in_(enrollment_ids)
+            ).all()
+        }
+
+        for enrollment in enrollments:
+            if enrollment.id not in existing_progress_enrollment_ids:
+                db.add(Progress(enrollment_id=enrollment.id, lesson_id=new_lesson.id))
+
+        db.commit()
+
     return new_lesson
 
 @router.put("/lessons/{lesson_id}", response_model=LessonResponse)
@@ -234,5 +255,6 @@ def delete_lesson(
     if course.teacher_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your course")
 
+    db.query(Progress).filter(Progress.lesson_id == lesson_id).delete(synchronize_session=False)
     db.delete(lesson)
     db.commit()
