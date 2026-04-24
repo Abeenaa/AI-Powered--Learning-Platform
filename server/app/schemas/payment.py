@@ -4,7 +4,7 @@ from datetime import datetime
 
 class PaymentInitiate(BaseModel):
     course_id:int
-    # Country is taken from user profile automatimatically
+    # Country is taken from user profile automatically
 
 class PaymentResponse(BaseModel):
     payment_id: int
