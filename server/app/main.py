@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .routes import auth,courses,enrollments,users,payments
+from .routes import auth,courses,enrollments,users,payments,chat
 
 app = FastAPI(
     title="Learning Platform API",
@@ -24,6 +24,8 @@ app.include_router(courses.router)
 app.include_router(enrollments.router)
 app.include_router(users.router)
 app.include_router(payments.router)
+app.include_router(chat.router)
+
 
 @app.get("/")
 def root():

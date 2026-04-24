@@ -21,8 +21,7 @@ def get_conversations(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-  
-# Get all unique users this person has chatted with
+    # Get all unique users this person has chatted with
     sent_to = db.query(ChatMessage.receiver_id).filter(
         ChatMessage.sender_id == current_user.id
     ).distinct().all()
@@ -31,7 +30,7 @@ def get_conversations(
         ChatMessage.receiver_id == current_user.id
     ).distinct().all()
 
-# Combine and deduplicate user IDs
+    # Combine and deduplicate user IDs
     user_ids = set()
     for (uid,) in sent_to:
         user_ids.add(uid)
