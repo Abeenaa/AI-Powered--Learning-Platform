@@ -4,6 +4,13 @@
 
 ---
 
+## Live API
+- **Base URL**: `https://ai-powered-learning-platform-7qs7.onrender.com`
+- **API Docs**: `https://ai-powered-learning-platform-7qs7.onrender.com/docs`
+- **ReDoc**: `https://ai-powered-learning-platform-7qs7.onrender.com/redoc`
+
+---
+
 ## System Architecture
 
 ```
