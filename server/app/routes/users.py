@@ -77,3 +77,100 @@ def get_stats(
         overall_progress=round(overall, 1),
         courses_created=courses_created
     )
+
+# ─── TEACHER DASHBOARD ───────────────────────────────────────────
+
+@router.get("/my-courses")
+def get_my_courses(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get all courses created by the teacher.
+    Frontend uses this for the Teacher Dashboard to show their courses.
+    Also shows how many students enrolled in each course.
+    """
+    courses = db.query(Course).filter(
+        Course.teacher_id == current_user.id
+    ).all()
+
+    result = []
+    for course in courses:
+        student_count = db.query(Enrollment).filter(
+            Enrollment.course_id == course.id,
+            Enrollment.payment_completed == True
+        ).count()
+
+        result.append({
+            "id": course.id,
+            "title": course.title,
+            "description": course.description,
+            "price": course.price,
+            "difficulty_level": course.difficulty_level,
+            "duration": course.duration,
+            "created_at": course.created_at,
+            "enrolled_students": student_count,
+            "total_lessons": len(course.lessons)
+        })
+
+    return result
+
+
+@router.get("/my-courses/{course_id}/students")
+def get_course_students(
+    course_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Get all students enrolled in a specific course.
+    Frontend uses this for the Teacher Dashboard to manage students.
+    Shows each student's progress in the course.
+    """
+    # Verify this course belongs to the teacher
+    course = db.query(Course).filter(
+        Course.id == course_id,
+        Course.teacher_id == current_user.id
+    ).first()
+
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found or not yours")
+
+    # Get all enrollments for this course
+    enrollments = db.query(Enrollment).filter(
+        Enrollment.course_id == course_id,
+        Enrollment.payment_completed == True
+    ).all()
+
+    students = []
+    for enrollment in enrollments:
+        student = db.query(User).filter(User.id == enrollment.user_id).first()
+        if not student:
+            continue
+
+        # Get progress
+        total = db.query(Progress).filter(
+            Progress.enrollment_id == enrollment.id
+        ).count()
+        completed = db.query(Progress).filter(
+            Progress.enrollment_id == enrollment.id,
+            Progress.completed == True
+        ).count()
+        percentage = round((completed / total * 100), 1) if total > 0 else 0
+
+        students.append({
+            "student_id": student.id,
+            "full_name": student.full_name,
+            "email": student.email,
+            "enrolled_at": enrollment.enrolled_at,
+            "progress_percentage": percentage,
+            "completed_lessons": completed,
+            "total_lessons": total
+        })
+
+    return {
+        "course_id": course_id,
+        "course_title": course.title,
+        "total_students": len(students),
+        "students": students
+    }
