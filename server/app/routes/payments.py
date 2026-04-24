@@ -143,26 +143,31 @@ def initiate_payment(
 @router.get("/chapa/verify/{tx_ref}")
 def verify_chapa(
     tx_ref: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     """
     Verify Chapa payment after user returns from payment page.
     Frontend calls this after user completes payment on Chapa.
     """
+    payment = db.query(Payment).filter(
+        Payment.transaction_id == tx_ref
+    ).first()
+
+    if not payment:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Payment not found")
+
+    if payment.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to verify this payment")
+
     result = verify_chapa_payment(tx_ref)
 
     if result.get("status") == "success" and result["data"]["status"] == "success":
-        # Find payment record
-        payment = db.query(Payment).filter(
-            Payment.transaction_id == tx_ref
-        ).first()
-
-        if payment:
-            payment.status = PaymentStatus.COMPLETED
-            db.commit()
-            # Create enrollment
-            create_enrollment_with_progress(db, payment.user_id, payment.course_id)
-            return {"status": "success", "message": "Payment verified and enrollment created"}
+        payment.status = PaymentStatus.COMPLETED
+        db.commit()
+        # Create enrollment
+        create_enrollment_with_progress(db, payment.user_id, payment.course_id)
+        return {"status": "success", "message": "Payment verified and enrollment created"}
 
     return {"status": "failed", "message": "Payment verification failed"}
 
