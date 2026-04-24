@@ -28,3 +28,15 @@ class Token(BaseModel):
     access_token: str
     token_type: str
     user: UserResponse
+# For updating profile (all fields optional)
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    country: Optional[str] = None
+    profile_picture: Optional[str] = None
+# For dashboard stats
+class UserStats(BaseModel):
+    enrolled_courses: int        # How many courses student enrolled in
+    completed_lessons: int       # Total lessons marked complete
+    total_lessons: int           # Total lessons across all enrollments
+    overall_progress: float      # Overall completion percentage
+    courses_created: int         # For teachers: how many courses they created
