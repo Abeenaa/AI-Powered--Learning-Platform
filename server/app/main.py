@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
-from .routes import auth,courses,enrollments,users,payments,chat,ai
+from .routes import auth, courses, enrollments, users, payments, chat, ai
 
 app = FastAPI(
     title="Learning Platform API",
@@ -9,10 +9,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS middleware
+# CORS middleware - allow frontend origins
+origins = [
+    settings.FRONTEND_URL,
+    "https://next-academy.netlify.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
